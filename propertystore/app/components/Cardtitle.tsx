@@ -14,7 +14,7 @@ export const CatrdTitle = ({title,price}: Props) =>{
             }}
         >
             <p className="card_title">{title}</p>
-            <p className="card_price">{price}</p>
+            <p className="card_price">Цена: {price} р.</p>
         </div>
     );
 };

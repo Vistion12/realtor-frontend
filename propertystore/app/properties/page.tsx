@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import { createProperty, deleteProperty, getAllProperties, PropertyRequest, updateProperty } from "../services/properties";
 import Title from "antd/es/typography/Title";
 import { CreateUpdateProperty, Mode } from "../components/CreateUpdateProperty";
-
+import { message } from "antd";
 
 export default function PropertiesPage(){
     const defaultValues = {
+        id: "",
         title: "",
         type: '',
         price: 1,
@@ -17,42 +18,56 @@ export default function PropertiesPage(){
         area: 1,
         rooms: 1,
         description: "",
-        mainPhotoUrl: "",
         isActive: true,
+        createdAt: new Date(),
+        images: []
     } as Property;
 
     const [values, setValues] = useState<Property>(defaultValues);
-
-
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen]=useState(false);
     const [mode, setMode] = useState(Mode.Create);
 
-    useEffect(()=>{
-        const getProperties = async ()=> {
-            const propertiesData  = await getAllProperties();
-            setLoading(false);
-            setProperties(propertiesData );
+    useEffect(() => {
+        const getProperties = async () => {
+            try {
+                const propertiesData = await getAllProperties();
+                setProperties(propertiesData);
+            } catch (error) {
+                message.error('Ошибка загрузки объектов');
+            } finally {
+                setLoading(false);
+            }
         };
 
         getProperties();
     }, []);
 
+        // Обновляем handleCreateProperty и handleUpdateProperty
     const handleCreateProperty = async (request: PropertyRequest) => {
-        await createProperty(request);
-        closeModal();
-
-        const propertiesData  = await getAllProperties();
-        setProperties(propertiesData );
+        try {
+            const propertyId = await createProperty(request);
+            message.success('Объект создан успешно');
+            closeModal();
+            const propertiesData = await getAllProperties();
+            setProperties(propertiesData);
+        } catch (error) {
+            message.error('Ошибка при создании объекта');
+        }
     };
 
     const handleUpdateProperty = async (id: string, request: PropertyRequest) => {
-        await updateProperty(id,request);
-        closeModal();
-
-        const propertiesData  = await getAllProperties();
-        setProperties(propertiesData );
+        try {
+            await updateProperty(id, request);
+            message.success('Объект обновлен успешно');
+            closeModal();
+            const propertiesData = await getAllProperties();
+            setProperties(propertiesData);
+            message.success('Объект обновлен успешно');
+        } catch (error) {
+            message.error('Ошибка при обновлении объекта');
+        }
     }
 
     const handleDeleteProperty= async (id: string) => {

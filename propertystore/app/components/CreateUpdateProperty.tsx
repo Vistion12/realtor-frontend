@@ -3,7 +3,11 @@ import { PropertyRequest } from "../services/properties";
 import Input from "antd/es/input/Input";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-import { Select, InputNumber, Checkbox, Form, Row, Col } from "antd";
+import { Select, InputNumber, Checkbox, Form, Row, Col, Button, Upload, message } from "antd";
+import { UploadOutlined } from '@ant-design/icons';
+import Image from "antd/es/image";
+import { uploadPropertyImage } from '../services/properties';
+
 
 interface Props {
     mode: Mode;
@@ -35,6 +39,8 @@ export const CreateUpdateProperty = ({
     const [rooms, setRooms] = useState<number>(1);
     const [description, setDescription] = useState<string>("");
     const [isActive, setIsActive] = useState<boolean>(true);
+    const [images, setImages] = useState<PropertyImage[]>([]);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         if (values) {
@@ -46,8 +52,31 @@ export const CreateUpdateProperty = ({
             setRooms(values.rooms);
             setDescription(values.description);
             setIsActive(values.isActive);
+            setImages(values.images || []);
+
         }
     }, [values]);
+
+    // Добавляем обработчик загрузки изображений
+const handleImageUpload = async (file: File) => {
+    setUploading(true);
+    try {
+        const imageUrl = await uploadPropertyImage(file);
+        const newImage: PropertyImage = {
+            id: Date.now().toString(),
+            url: imageUrl,
+            isMain: images.length === 0,
+            order: images.length
+        };
+        
+        setImages([...images, newImage]);
+        message.success('Изображение загружено');
+    } catch (error) {
+        message.error('Ошибка загрузки изображения');
+    } finally {
+        setUploading(false);
+    }
+};
 
     const handleOnOk = async () => {
         const propertyRequest: PropertyRequest = {
@@ -180,6 +209,36 @@ export const CreateUpdateProperty = ({
                             Активный объект
                         </Checkbox>
                     </Form.Item>
+                    <Form.Item label="Изображения">
+                        <Upload
+                            beforeUpload={(file: File) => {
+                                handleImageUpload(file);
+                                return false;
+                            }}
+                            showUploadList={false}
+                            multiple
+                        >
+                            <Button icon={<UploadOutlined />} loading={uploading}>
+                                Загрузить изображения
+                            </Button>
+                        </Upload>
+                        
+                        <div style={{ marginTop: 16 }}>
+                            {images.map((image, index) => (
+                                <div key={image.id} style={{ display: 'inline-block', margin: 8 }}>
+                                    <img
+                                        src={`http://localhost:5100${image.url}`}
+                                        alt="Property"
+                                        width={80}
+                                        height={80}
+                                        style={{ objectFit: 'cover' }}                                    
+                                    />
+                                    {image.isMain && <div style={{ textAlign: 'center' }}>Главное</div>}
+                                </div>
+                            ))}
+                        </div>
+                    </Form.Item>
+                    
                 </Form>
             </div>
         </Modal>

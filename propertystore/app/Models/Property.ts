@@ -10,4 +10,6 @@ interface Property {
     mainPhotoUrl?: string;
     isActive: boolean;
     createdAt: Date;
+    images: PropertyImage[];
 }
+

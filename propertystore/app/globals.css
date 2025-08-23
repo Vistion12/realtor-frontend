@@ -36,3 +36,7 @@
   max-width: 80%;
   white-space: normal;
 }
+
+.property_modal .ant-upload {
+    margin-bottom: 16px;
+}
