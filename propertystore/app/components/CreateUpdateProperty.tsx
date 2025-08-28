@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Select, InputNumber, Checkbox, Form, Row, Col, Button, Upload, message } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
-import Image from "antd/es/image";
 import { uploadPropertyImage } from '../services/properties';
-
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 
 interface Props {
     mode: Mode;
@@ -53,20 +52,32 @@ export const CreateUpdateProperty = ({
             setDescription(values.description);
             setIsActive(values.isActive);
             setImages(values.images || []);
-
         }
     }, [values]);
 
-    // Добавляем обработчик загрузки изображений
-const handleImageUpload = async (file: File) => {
+        // В handleImageUpload добавьте валидацию
+    const handleImageUpload = async (file: File) => {
+    // Валидация размера файла (максимум 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        message.error('Размер файла не должен превышать 5MB');
+        return false;
+    }
+
+    // Валидация типа файла
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+        message.error('Разрешены только JPG, PNG, WEBP и GIF изображения');
+        return false;
+    }
+
     setUploading(true);
     try {
         const imageUrl = await uploadPropertyImage(file);
         const newImage: PropertyImage = {
-            id: Date.now().toString(),
-            url: imageUrl,
-            isMain: images.length === 0,
-            order: images.length
+        id: Date.now().toString(),
+        url: imageUrl,
+        isMain: images.length === 0, // Первое изображение становится главным
+        order: images.length
         };
         
         setImages([...images, newImage]);
@@ -76,24 +87,42 @@ const handleImageUpload = async (file: File) => {
     } finally {
         setUploading(false);
     }
-};
+    };
+
+    const handleSetMainImage = (imageId: string) => {
+        setImages(images.map(img => ({
+            ...img,
+            isMain: img.id === imageId
+        })));
+    };
+
+    const handleRemoveImage = (imageId: string) => {
+        setImages(images.filter(img => img.id !== imageId));
+    };
 
     const handleOnOk = async () => {
-        const propertyRequest: PropertyRequest = {
-            title,
-            type,
-            price,
-            address,
-            area,
-            rooms,
-            description,
-            isActive
-        };
+    // Преобразуем images в формат для отправки
+    const imageRequests = images.map(img => ({
+        url: img.url,
+        isMain: img.isMain
+    }));
 
-        mode === Mode.Create 
-            ? handleCreate(propertyRequest) 
-            : handleUpdate(values.id, propertyRequest);
+    const propertyRequest: PropertyRequest = {
+        title,
+        type,
+        price,
+        address,
+        area,
+        rooms,
+        description,
+        isActive,
+        images: imageRequests // Добавляем изображения
     };
+
+    mode === Mode.Create 
+        ? handleCreate(propertyRequest) 
+        : handleUpdate(values.id, propertyRequest);
+};
 
     const typeOptions = [
         { value: "novostroyki", label: "Новостройки" },
@@ -141,14 +170,14 @@ const handleImageUpload = async (file: File) => {
                             <Form.Item label="Цена" required>
                                 <InputNumber
                                     value={price}
-                                    onChange={(value: number | null) => setPrice(value || 1)}
+                                    onChange={(value: string | number | null) => setPrice(Number(value) || 1)}
                                     placeholder="Цена"
                                     min={1}
                                     style={{ width: "100%" }}
-                                    formatter = {(value: string | number | undefined) => 
+                                    formatter={(value) => 
                                         `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                                     }
-                                    parser={(value: string | undefined) => 
+                                    parser={(value) => 
                                         parseInt(value?.replace(/\s/g, '') || '1')
                                     }
                                 />
@@ -160,7 +189,7 @@ const handleImageUpload = async (file: File) => {
                             <Form.Item label="Площадь (м²)" required>
                                 <InputNumber
                                     value={area}
-                                    onChange={(value: number | null) => setArea(value || 1)}
+                                    onChange={(value: string | number | null) => setArea(Number(value) || 1)}
                                     placeholder="Площадь"
                                     min={1}
                                     step={0.1}
@@ -183,7 +212,7 @@ const handleImageUpload = async (file: File) => {
                     <Form.Item label="Количество комнат" required>
                         <InputNumber
                             value={rooms}
-                            onChange={(value: number | null) => setRooms(value || 1)}
+                            onChange={(value: string | number | null) => setRooms(Number(value) || 1)}
                             placeholder="Количество комнат"
                             min={1}
                             style={{ width: "100%" }}
@@ -204,37 +233,91 @@ const handleImageUpload = async (file: File) => {
                     <Form.Item>
                         <Checkbox
                             checked={isActive}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIsActive(e.target.checked)}
+                            onChange={(e: CheckboxChangeEvent) => setIsActive(e.target.checked)}
                         >
                             Активный объект
                         </Checkbox>
                     </Form.Item>
+                    
+                    {/* Изображения */}
                     <Form.Item label="Изображения">
                         <Upload
                             beforeUpload={(file: File) => {
-                                handleImageUpload(file);
-                                return false;
+                            handleImageUpload(file);
+                            return false;
                             }}
                             showUploadList={false}
                             multiple
+                            accept="image/*"
                         >
                             <Button icon={<UploadOutlined />} loading={uploading}>
-                                Загрузить изображения
+                            Загрузить изображения
                             </Button>
                         </Upload>
                         
-                        <div style={{ marginTop: 16 }}>
-                            {images.map((image, index) => (
-                                <div key={image.id} style={{ display: 'inline-block', margin: 8 }}>
-                                    <img
-                                        src={`http://localhost:5100${image.url}`}
-                                        alt="Property"
-                                        width={80}
-                                        height={80}
-                                        style={{ objectFit: 'cover' }}                                    
-                                    />
-                                    {image.isMain && <div style={{ textAlign: 'center' }}>Главное</div>}
+                        <div style={{ marginTop: 16, display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {images.map((image) => (
+                            <div key={image.id} style={{ position: 'relative', display: 'inline-block' }}>
+                                <img
+                                src={`http://localhost:5100${image.url}`}
+                                alt="Property"
+                                width={80}
+                                height={80}
+                                style={{ 
+                                    objectFit: 'cover',
+                                    border: image.isMain ? '2px solid #1890ff' : '1px solid #d9d9d9',
+                                    borderRadius: '4px'
+                                }}                                    
+                                />
+                                
+                                <div style={{ 
+                                position: 'absolute', 
+                                top: 2, 
+                                right: 2,
+                                display: 'flex',
+                                gap: '2px'
+                                }}>
+                                <Button
+                                    size="small"
+                                    type={image.isMain ? "primary" : "default"}
+                                    onClick={() => handleSetMainImage(image.id)}
+                                    style={{ 
+                                    minWidth: '20px', 
+                                    width: '20px', 
+                                    height: '20px',
+                                    fontSize: '10px',
+                                    padding: 0
+                                    }}
+                                >
+                                    {image.isMain ? '✓' : '☆'}
+                                </Button>
+                                
+                                <Button
+                                    size="small"
+                                    danger
+                                    onClick={() => handleRemoveImage(image.id)}
+                                    style={{ 
+                                    minWidth: '20px', 
+                                    width: '20px', 
+                                    height: '20px',
+                                    fontSize: '10px',
+                                    padding: 0
+                                    }}
+                                >
+                                    ×
+                                </Button>
                                 </div>
+                                
+                                {image.isMain && (
+                                <div style={{ 
+                                    textAlign: 'center', 
+                                    fontSize: '10px',
+                                    marginTop: '2px'
+                                }}>
+                                    Главное
+                                </div>
+                                )}
+                            </div>
                             ))}
                         </div>
                     </Form.Item>

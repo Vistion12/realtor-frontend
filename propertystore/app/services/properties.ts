@@ -1,3 +1,5 @@
+const BASE_URL = "http://localhost:5100/api";
+
 export interface PropertyRequest{
     title: string;
     type: string; // novostroyki, secondary, rent, countryside, invest
@@ -7,21 +9,31 @@ export interface PropertyRequest{
     rooms: number;
     description: string;
     isActive: boolean;
+    images?: PropertyImageRequest[];
+}
+
+export interface PropertyImageRequest {
+    url: string;
+    isMain: boolean;
 }
 
 export const getAllProperties = async ()=>{
-    const response = await fetch("http://localhost:5100/Properties");
+    const response = await fetch(`${BASE_URL}/Properties`);
     return response.json();
 };
 
 export const createProperty = async (propertyRequest: PropertyRequest): Promise<string> => {
-    const response = await fetch("http://localhost:5100/Properties", {
+    const response = await fetch(`${BASE_URL}/Properties`, {
         method: "POST",
         headers: {
             "content-type": "application/json",
         },
         body: JSON.stringify(propertyRequest),
     });
+
+    if (!response.ok) {
+        throw new Error("Ошибка при создании объекта");
+    }
     
     // Бекенд возвращает GUID созданного объекта
     const propertyId = await response.text();
@@ -29,24 +41,27 @@ export const createProperty = async (propertyRequest: PropertyRequest): Promise<
 };
 
 export const updateProperty = async (id: string, propertyRequest: PropertyRequest) => {
-    await fetch(`http://localhost:5100/Properties/${id}`, {
+    const response = await fetch(`${BASE_URL}/Properties/${id}`, {
         method: "PUT",
         headers: {
             "content-type": "application/json",
         },
         body: JSON.stringify(propertyRequest),
     });
+    if (!response.ok) {
+        throw new Error("Ошибка при обновлении объекта");
+    }
 };
 
 export const deleteProperty = async (id: string) => {
-    await fetch (`http://localhost:5100/Properties/${id}`, {
+    await fetch (`${BASE_URL}/Properties/${id}`, {
         method: "DELETE",
     });
 };
 
 // Добавляем методы для работы с изображениями
 export const addImageToProperty = async (propertyId: string, imageUrl: string, isMain: boolean = false) => {
-    await fetch(`http://localhost:5100/Properties/${propertyId}/images`, {
+    await fetch(`${BASE_URL}/Properties/${propertyId}/images`, {
         method: "POST",
         headers: {
             "content-type": "application/json",
@@ -56,13 +71,13 @@ export const addImageToProperty = async (propertyId: string, imageUrl: string, i
 };
 
 export const removeImageFromProperty = async (propertyId: string, imageId: string) => {
-    await fetch(`http://localhost:5100/Properties/${propertyId}/images/${imageId}`, {
+    await fetch(`${BASE_URL}/Properties/${propertyId}/images/${imageId}`, {
         method: "DELETE",
     });
 };
 
 export const setMainImage = async (propertyId: string, imageId: string) => {
-    await fetch(`http://localhost:5100/Properties/${propertyId}/images/${imageId}/main`, {
+    await fetch(`${BASE_URL}/Properties/${propertyId}/images/${imageId}/main`, {
         method: "PUT",
     });
 };
@@ -72,7 +87,7 @@ export const uploadPropertyImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     
-    const response = await fetch('http://localhost:5100/api/FileUpload/property-image', {
+    const response = await fetch(`${BASE_URL}/FileUpload/property-image`, {
         method: 'POST',
         body: formData,
     });

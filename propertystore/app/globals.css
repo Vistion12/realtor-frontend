@@ -40,3 +40,153 @@
 .property_modal .ant-upload {
     margin-bottom: 16px;
 }
+
+/* Карусель изображений */
+.image-carousel {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.carousel-image:hover {
+  transform: scale(1.02);
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.prev-btn {
+  left: 8px;
+}
+
+.next-btn {
+  right: 8px;
+}
+
+.expand-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  z-index: 2;
+}
+
+.expand-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dot.active {
+  background: white;
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Модальное окно карусели */
+.modal-carousel {
+  position: relative;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-carousel img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  z-index: 2;
+}
+
+.modal-carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.modal-carousel-btn.prev-btn {
+  left: 16px;
+}
+
+.modal-carousel-btn.next-btn {
+  right: 16px;
+}
+
+/* Плейсхолдер для отсутствующих изображений */
+.image-placeholder {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  color: #999;
+}
+
+/* Адаптивность карточек */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding-top: 30px;
+}
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
