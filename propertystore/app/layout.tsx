@@ -5,7 +5,8 @@ import Link from "next/link";
 
 const items = [
   {key: "home", label: <Link href={"/"}>Главная страница</Link>}, 
-  {key: "properties", label: <Link href={"/properties"}>Объекты недвижимости</Link>}
+  {key: "properties", label: <Link href={"/properties"}>Объекты недвижимости</Link>},
+  {key: "clients", label: <Link href={"/clients"}>Клиенты</Link>}
 ];
 
 export default function RootLayout({
@@ -24,11 +25,11 @@ export default function RootLayout({
                   items = {items} 
                   style={{flex: 1, minWidth: 0}}
               />
-            </Header>
-            <Content style={{padding: "0 48px"}}>{children}</Content>
-            <Footer style={{textAlign: "center" }}>
+          </Header>
+          <Content style={{padding: "0 48px"}}>{children}</Content>
+          <Footer style={{textAlign: "center" }}>
               This is property store
-            </Footer>
+          </Footer>
           
           </Layout>        
       </body>

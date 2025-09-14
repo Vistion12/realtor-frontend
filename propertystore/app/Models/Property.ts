@@ -1,4 +1,4 @@
-interface Property {
+export interface Property {
     id: string;
     title: string;
     type: string; 
@@ -13,3 +13,9 @@ interface Property {
     images: PropertyImage[];
 }
 
+export interface PropertyImage {
+    id: string;
+    url: string;
+    isMain: boolean;
+    order: number;
+}

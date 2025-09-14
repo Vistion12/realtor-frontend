@@ -2,6 +2,8 @@ import Card from "antd/es/card/Card";
 import { CatrdTitle } from "./Cardtitle";
 import Button from "antd/es/button/button";
 import { ImageCarousel } from "./ImageCarousel";
+import { ViewingForm } from "./ViewingForm"; // Добавляем импорт
+import { Property } from "../Models/Property";
 
 interface Props {
   properties: Property[];
@@ -42,10 +44,13 @@ export const Properties = ({ properties, handleDelete, handleOpen }: Props) => {
           <p>Комнат: {property.rooms}</p>
           <p>Описание: {property.description}</p>
           
-          <div className="card_buttons">
+          
+          <ViewingForm property={property} />
+          
+          <div className="card_buttons" style={{ marginTop: '16px' }}>            
             <Button 
               onClick={() => handleOpen(property)} 
-              style={{ flex: 1 }}
+              style={{ flex: 1, marginRight: '8px' }}
             >
               Редактировать
             </Button>

@@ -7,6 +7,7 @@ import { Select, InputNumber, Checkbox, Form, Row, Col, Button, Upload, message 
 import { UploadOutlined } from '@ant-design/icons';
 import { uploadPropertyImage } from '../services/properties';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import { Property, PropertyImage } from "../Models/Property";
 
 interface Props {
     mode: Mode;

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Modal, Button, Image } from 'antd';
 import { LeftOutlined, RightOutlined, ExpandOutlined } from '@ant-design/icons';
+import { PropertyImage } from '../Models/Property';
 
 interface ImageCarouselProps {
   images: PropertyImage[];
@@ -86,7 +87,7 @@ export const ImageCarousel = ({ images, propertyTitle }: ImageCarouselProps) => 
         footer={null}
         width="80vw"
         style={{ top: 20 }}
-        bodyStyle={{ padding: 0 }}
+        styles={{ body: { padding: 0 } }} // ← исправлено
       >
         <div className="modal-carousel">
           <img

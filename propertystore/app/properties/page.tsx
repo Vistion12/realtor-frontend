@@ -7,6 +7,7 @@ import { createProperty, deleteProperty, getAllProperties, PropertyRequest, upda
 import Title from "antd/es/typography/Title";
 import { CreateUpdateProperty, Mode } from "../components/CreateUpdateProperty";
 import { message } from "antd";
+import { Property } from "../Models/Property";
 
 export default function PropertiesPage(){
     const defaultValues = {
