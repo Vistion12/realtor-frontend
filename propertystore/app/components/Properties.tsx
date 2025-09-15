@@ -4,6 +4,7 @@ import Button from "antd/es/button/button";
 import { ImageCarousel } from "./ImageCarousel";
 import { ViewingForm } from "./ViewingForm"; // Добавляем импорт
 import { Property } from "../Models/Property";
+import { ExpandableText } from "./ExpandableText";
 
 interface Props {
   properties: Property[];
@@ -42,7 +43,13 @@ export const Properties = ({ properties, handleDelete, handleOpen }: Props) => {
           <p>Адрес: {property.address}</p>
           <p>Площадь: {property.area} м²</p>
           <p>Комнат: {property.rooms}</p>
-          <p>Описание: {property.description}</p>
+          <div>
+            Описание:
+            <ExpandableText 
+              text={property.description} 
+              maxLength={100} 
+            />
+          </div>
           
           
           <ViewingForm property={property} />
