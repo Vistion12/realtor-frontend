@@ -6,7 +6,8 @@ import Link from "next/link";
 const items = [
   {key: "home", label: <Link href={"/"}>Главная страница</Link>}, 
   {key: "properties", label: <Link href={"/properties"}>Объекты недвижимости</Link>},
-  {key: "clients", label: <Link href={"/clients"}>Клиенты</Link>}
+  {key: "clients", label: <Link href={"/clients"}>Клиенты</Link>},
+  { key: "requests", label: <Link href={"/requests"}>Заявки</Link> },
 ];
 
 export default function RootLayout({

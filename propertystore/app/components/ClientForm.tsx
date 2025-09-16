@@ -40,8 +40,8 @@ export const ClientForm = ({ client, onSuccess, onCancel }: Props) => {
     { value: "website", label: "Сайт" },
     { value: "telegram", label: "Telegram" },
     { value: "phone_call", label: "Телефонный звонок" },
-    { value: "instagram_ads", label: "Instagram Реклама" },
-    { value: "recommendation", label: "Рекомендация" },
+    //{ value: "instagram_ads", label: "Instagram Реклама" },
+    //{ value: "recommendation", label: "Рекомендация" },
   ];
 
   return (
