@@ -1,126 +1,102 @@
 "use client";
 
-import  Button  from "antd/es/button/button";
-import { Properties } from "../components/Properties";
 import { useEffect, useState } from "react";
-import { createProperty, deleteProperty, getAllProperties, PropertyRequest, updateProperty } from "../services/properties";
-import Title from "antd/es/typography/Title";
-import { CreateUpdateProperty, Mode } from "../components/CreateUpdateProperty";
-import { message } from "antd";
 import { Property } from "../Models/Property";
+import { getAllProperties } from "../services/properties";
+import { Button, message, Tabs, TabsProps } from "antd";
+import Title from "antd/es/typography/Title";
+import { PropertiesPublic } from "../components/PropertiesPublic";
 
-export default function PropertiesPage(){
-    const defaultValues = {
-        id: "",
-        title: "",
-        type: '',
-        price: 1,
-        address: "",
-        area: 1,
-        rooms: 1,
-        description: "",
-        isActive: true,
-        createdAt: new Date(),
-        images: []
-    } as Property;
+// Функция для получения свойств с фильтром
+const getPropertiesByType = async (type?: string): Promise<Property[]> => {
+  const url = type 
+    ? `http://localhost:5100/api/Properties?type=${type}`
+    : 'http://localhost:5100/api/Properties';
+  
+  const response = await fetch(url);
+  if (!response.ok) throw new Error('Ошибка загрузки объектов');
+  return response.json();
+};
 
-    const [values, setValues] = useState<Property>(defaultValues);
-    const [properties, setProperties] = useState<Property[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [isModalOpen, setIsModalOpen]=useState(false);
-    const [mode, setMode] = useState(Mode.Create);
+export default function PropertiesCatalogPage() {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<string>("all");
 
-    useEffect(() => {
-        const getProperties = async () => {
-            try {
-                const propertiesData = await getAllProperties();
-                setProperties(propertiesData);
-            } catch (error) {
-                message.error('Ошибка загрузки объектов');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        getProperties();
-    }, []);
-
-        // Обновляем handleCreateProperty и handleUpdateProperty
-    const handleCreateProperty = async (request: PropertyRequest) => {
-        try {
-            const propertyId = await createProperty(request);
-            message.success('Объект создан успешно');
-            closeModal();
-            const propertiesData = await getAllProperties();
-            setProperties(propertiesData);
-        } catch (error) {
-            message.error('Ошибка при создании объекта');
+  // Загрузка объектов при изменении активной вкладки
+  useEffect(() => {
+    const loadProperties = async () => {
+      setLoading(true);
+      try {
+        let data: Property[];
+        
+        if (activeTab === "all") {
+          data = await getPropertiesByType();
+        } else {
+          data = await getPropertiesByType(activeTab);
         }
+        
+        setProperties(data);
+      } catch (error) {
+        message.error('Ошибка загрузки объектов');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleUpdateProperty = async (id: string, request: PropertyRequest) => {
-        try {
-            await updateProperty(id, request);
-            message.success('Объект обновлен успешно');
-            closeModal();
-            const propertiesData = await getAllProperties();
-            setProperties(propertiesData);
-            message.success('Объект обновлен успешно');
-        } catch (error) {
-            message.error('Ошибка при обновлении объекта');
-        }
-    }
+    loadProperties();
+  }, [activeTab]);
 
-    const handleDeleteProperty= async (id: string) => {
-        await deleteProperty(id);
+  // Конфигурация вкладок
+  const tabItems: TabsProps['items'] = [
+    {
+      key: 'all',
+      label: 'Все объекты',
+    },
+    {
+      key: 'novostroyki',
+      label: 'Новостройки',
+    },
+    {
+      key: 'secondary',
+      label: 'Вторичка',
+    },
+    {
+      key: 'rent',
+      label: 'Аренда',
+    },
+    {
+      key: 'countryside',
+      label: 'Загородная',
+    },
+    {
+      key: 'invest',
+      label: 'Инвестиционная',
+    },
+  ];
 
-        const propertiesData  = await getAllProperties();
-        setProperties(propertiesData);
-    }
- 
-    const openModal=()=>{
-        setIsModalOpen(true);
-    };
+  return (
+    <div style={{ padding: '24px 0' }}>
+      <Title level={1} style={{ textAlign: 'center', marginBottom: '32px' }}>
+        Каталог недвижимости
+      </Title>
 
-    const closeModal= ()=>{
-        setValues(defaultValues);
-        setIsModalOpen(false);
-    };
+      {/* Табы для фильтрации по категориям */}
+      <Tabs
+        items={tabItems}
+        activeKey={activeTab}
+        onChange={setActiveTab}
+        centered
+        style={{ marginBottom: '32px' }}
+      />
 
-    const openEditModal = (property: Property) =>{
-        setMode(Mode.Edit);
-        setValues(property);
-        setIsModalOpen(true);
-    }   
-
-    return (
-        <div>
-            <Button 
-                type = "primary"
-                style ={{marginTop: "30px"}}
-                size="large"
-                onClick={openModal}
-            >
-                Добавить недвижимость
-            </Button>            
-            <CreateUpdateProperty 
-                mode={mode} 
-                values={values} 
-                isModalOpen={isModalOpen} 
-                handleCreate={handleCreateProperty} 
-                handleUpdate={handleUpdateProperty} 
-                handleCancel={closeModal}
-            />
-            {loading ? (
-                <Title>load....</Title>
-                ) : (
-                    <Properties 
-                        properties={properties} 
-                        handleOpen={openEditModal} 
-                        handleDelete={handleDeleteProperty}
-                    />
-                )}            
-        </div>
-    );
+      {loading ? (
+        <Title level={3} style={{ textAlign: 'center' }}>Загрузка...</Title>
+      ) : (
+        <PropertiesPublic
+          properties={properties} 
+        />
+      )}
+    </div>
+  );
 }
-

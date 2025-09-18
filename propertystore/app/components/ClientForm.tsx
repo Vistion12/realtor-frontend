@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Добавил useEffect
 import { Form, Input, Button, Select, message } from "antd";
 import { createClient, updateClient, ClientRequest, Client } from "../services/clients";
 import { SourceType } from "../types";
@@ -14,6 +14,21 @@ interface Props {
 export const ClientForm = ({ client, onSuccess, onCancel }: Props) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
+
+  // Добавил useEffect для сброса формы при изменении клиента
+  useEffect(() => {
+    if (client) {
+      form.setFieldsValue({
+        name: client.name,
+        phone: client.phone,
+        email: client.email,
+        source: client.source,
+        notes: client.notes
+      });
+    } else {
+      form.resetFields(); // Сбрасываем форму при создании нового клиента
+    }
+  }, [client, form]);
 
   const onFinish = async (values: ClientRequest) => {
     setLoading(true);
@@ -50,13 +65,7 @@ export const ClientForm = ({ client, onSuccess, onCancel }: Props) => {
       layout="vertical"
       onFinish={onFinish}
       autoComplete="off"
-      initialValues={client ? {
-        name: client.name,
-        phone: client.phone,
-        email: client.email,
-        source: client.source,
-        notes: client.notes
-      } : {}}
+      // Убрал initialValues, так как теперь используем useEffect
     >
       <Form.Item 
         name="name" 
