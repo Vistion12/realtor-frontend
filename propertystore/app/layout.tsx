@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const items = [
   {key: "home", label: <Link href={"/"}>Главная страница</Link>}, 
-  {key: "catalog", label: <Link href={"/properties"}>Каталог недвижимости</Link>}, // Новая публичная ссылка
+  {key: "catalog", label: <Link href={"/properties"}>Каталог недвижимости</Link>},
   {key: "admin-properties", label: <Link href={"/admin/properties"}>Управление объектами (Админ)</Link>},
   {key: "clients", label: <Link href={"/clients"}>Клиенты</Link>},
   { key: "requests", label: <Link href={"/requests"}>Заявки</Link> },
