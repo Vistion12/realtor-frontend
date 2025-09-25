@@ -5,8 +5,7 @@ import { ConsultationForm } from "./components/ConsultationForm"; // Испра�
 import { getAllClients } from "./services/clients"; // Исправлен путь
 
 export default function Home() {
-  useEffect(() => {
-    // Тестовый запрос к API
+  useEffect(() => {    
     getAllClients()
       .then(clients => console.log("Clients:", clients))
       .catch(error => console.error("API Error:", error));

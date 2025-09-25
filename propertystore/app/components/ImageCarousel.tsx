@@ -1,4 +1,3 @@
-// components/ImageCarousel.tsx
 import { useState } from 'react';
 import { Modal, Button, Image } from 'antd';
 import { LeftOutlined, RightOutlined, ExpandOutlined } from '@ant-design/icons';
@@ -87,7 +86,7 @@ export const ImageCarousel = ({ images, propertyTitle }: ImageCarouselProps) => 
         footer={null}
         width="80vw"
         style={{ top: 20 }}
-        styles={{ body: { padding: 0 } }} // ← исправлено
+        styles={{ body: { padding: 0, margin: 0 } }} 
       >
         <div className="modal-carousel">
           <img

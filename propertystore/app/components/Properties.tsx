@@ -26,7 +26,7 @@ const getPropertyTypeLabel = (type: string): string => {
 
 export const Properties = ({ properties, handleDelete, handleOpen }: Props) => {
   return (
-    <div className="cards">
+    <>
       {properties.map((property: Property) => (
         <Card 
           key={property.id} 
@@ -71,6 +71,6 @@ export const Properties = ({ properties, handleDelete, handleOpen }: Props) => {
           </div>
         </Card> 
       ))}
-    </div>
+    </>
   );
 };

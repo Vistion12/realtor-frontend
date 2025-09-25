@@ -94,7 +94,7 @@ export default function PropertiesPage(){
     }   
 
     return (
-        <div>
+        <div className="cards-container">
             <Button 
                 type = "primary"
                 style ={{marginTop: "30px"}}
@@ -114,11 +114,13 @@ export default function PropertiesPage(){
             {loading ? (
                 <Title>load....</Title>
                 ) : (
-                    <Properties 
+                    <div className="cards admin-cards"> 
+                        <Properties 
                         properties={properties} 
                         handleOpen={openEditModal} 
                         handleDelete={handleDeleteProperty}
-                    />
+                        />
+                    </div>
                 )}            
         </div>
     );

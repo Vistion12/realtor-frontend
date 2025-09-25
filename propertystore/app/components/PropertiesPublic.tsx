@@ -23,11 +23,7 @@ const getPropertyTypeLabel = (type: string): string => {
 
 export const PropertiesPublic = ({ properties }: Props) => {
   return (
-    <div className="cards" style={{ 
-      display: 'grid', 
-      gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
-      gap: '24px' 
-    }}>
+    <>
       {properties.map((property: Property) => (
         <Card 
           key={property.id}
@@ -42,7 +38,6 @@ export const PropertiesPublic = ({ properties }: Props) => {
             body: { padding: '16px' } 
           }}
         >
-          {/* Заголовок с ценой */}
           <div style={{ 
             display: "flex",
             flexDirection: "row",
@@ -63,7 +58,6 @@ export const PropertiesPublic = ({ properties }: Props) => {
             </p>
           </div>
 
-          {/* Характеристики */}
           <div style={{ marginBottom: '12px' }}>
             <p style={{ margin: '4px 0', fontSize: '14px' }}>
               <strong>Тип:</strong> {getPropertyTypeLabel(property.type)}
@@ -79,7 +73,6 @@ export const PropertiesPublic = ({ properties }: Props) => {
             </p>
           </div>
 
-          {/* Описание */}
           <div style={{ marginBottom: '16px' }}>
             <ExpandableText 
               text={property.description} 
@@ -87,10 +80,9 @@ export const PropertiesPublic = ({ properties }: Props) => {
             />
           </div>
           
-          {/* Кнопка заявки на просмотр */}
           <ViewingForm property={property} />
         </Card> 
       ))}
-    </div>
+    </>
   );
 };

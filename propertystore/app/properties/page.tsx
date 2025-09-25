@@ -81,7 +81,7 @@ export default function PropertiesCatalogPage() {
         Каталог недвижимости
       </Title>
 
-      {/* Табы для фильтрации по категориям */}
+      
       <Tabs
         items={tabItems}
         activeKey={activeTab}
@@ -93,9 +93,11 @@ export default function PropertiesCatalogPage() {
       {loading ? (
         <Title level={3} style={{ textAlign: 'center' }}>Загрузка...</Title>
       ) : (
-        <PropertiesPublic
-          properties={properties} 
-        />
+          <div className="cards-container"> 
+          <div className="cards public-cards">
+            <PropertiesPublic properties={properties} />
+          </div>
+        </div>
       )}
     </div>
   );
