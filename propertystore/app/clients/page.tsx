@@ -6,32 +6,35 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Client, getAllClients, deleteClient } from "../services/clients";
 import { ClientForm } from "../components/ClientForm";
 import { ClientsCard } from "../components/ClientsCard";
+import { useAuth } from "../contexts/AuthContext"; // ← ДОБАВЬ ИМПОРТ
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const { checkAuthError } = useAuth(); // ← ДОБАВЬ ХУК
 
   const loadClients = async () => {
     try {
       setLoading(true);
       const data = await getAllClients();
       setClients(data);
-    } catch (error) {
+    } catch (error: any) { // ← ДОБАВЬ ТИП any
+      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
       message.error("Ошибка загрузки клиентов");
     } finally {
       setLoading(false);
     }
   };
 
-
   const handleDelete = async (id: string) => {
     try {
       await deleteClient(id);
       message.success("Клиент удален");
       loadClients();
-    } catch (error) {
+    } catch (error: any) { // ← ДОБАВЬ ТИП any
+      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
       message.error("Ошибка удаления клиента");
     }
   };
@@ -97,8 +100,6 @@ export default function ClientsPage() {
           onCancel={handleModalClose}
         />
       </Modal>
-
-      
     </div>
   );
 }

@@ -8,6 +8,7 @@ import Title from "antd/es/typography/Title";
 import { CreateUpdateProperty, Mode } from "../../components/CreateUpdateProperty";
 import { message } from "antd";
 import { Property } from "../../Models/Property";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 export default function PropertiesPage(){
     const defaultValues = {
@@ -23,7 +24,7 @@ export default function PropertiesPage(){
         createdAt: new Date(),
         images: []
     } as Property;
-
+    const { checkAuthError } = useAuth();
     const [values, setValues] = useState<Property>(defaultValues);
     const [properties, setProperties] = useState<Property[]>([]);
     const [loading, setLoading] = useState(true);
@@ -53,7 +54,8 @@ export default function PropertiesPage(){
             closeModal();
             const propertiesData = await getAllProperties();
             setProperties(propertiesData);
-        } catch (error) {
+        } catch (error: any) {
+            checkAuthError(error); 
             message.error('Ошибка при создании объекта');
         }
     };
@@ -66,17 +68,23 @@ export default function PropertiesPage(){
             const propertiesData = await getAllProperties();
             setProperties(propertiesData);
             message.success('Объект обновлен успешно');
-        } catch (error) {
+        } catch (error: any) {
+            checkAuthError(error);
             message.error('Ошибка при обновлении объекта');
         }
     }
 
-    const handleDeleteProperty= async (id: string) => {
+    const handleDeleteProperty = async (id: string) => {
+    try {
         await deleteProperty(id);
-
-        const propertiesData  = await getAllProperties();
+        message.success('Объект удален успешно'); 
+        const propertiesData = await getAllProperties();
         setProperties(propertiesData);
+    } catch (error: any) {
+        checkAuthError(error); 
+        message.error('Ошибка при удалении объекта');
     }
+}
  
     const openModal=()=>{
         setIsModalOpen(true);

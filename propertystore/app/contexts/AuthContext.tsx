@@ -15,7 +15,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
-    // Проверяем токен при загрузке приложения
     const token = sessionStorage.getItem('authToken');
     const savedUsername = sessionStorage.getItem('username');
     
@@ -46,10 +45,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ОДНА функция useAuth - объединенная
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  return context;
+
+  // Функция для проверки ошибок авторизации
+  const checkAuthError = (error: any) => {
+    if (error?.message === 'Unauthorized' || error?.message?.includes('401')) {
+      context.logout();
+      window.location.href = '/login';
+    }
+  };
+
+  return { 
+    ...context, 
+    checkAuthError 
+  };
 }

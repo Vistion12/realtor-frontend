@@ -3,17 +3,21 @@
 import { useEffect, useState } from "react";
 import { Table, Button, Tag, message, Space, Modal } from "antd";
 import { Request, getAllRequests, updateRequestStatus } from "../services/requests";
+import { useAuth } from "../contexts/AuthContext"; // ← ДОБАВЬ ИМПОРТ
 
 export default function RequestsPage() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
+  const { checkAuthError } = useAuth(); // ← ДОБАВЬ ХУК
 
   const loadRequests = async () => {
     try {
+      setLoading(true);
       const data = await getAllRequests();
       setRequests(data);
-    } catch (error) {
+    } catch (error: any) { // ← ДОБАВЬ ТИП any
+      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
       message.error("Ошибка загрузки заявок");
     } finally {
       setLoading(false);
@@ -25,7 +29,8 @@ export default function RequestsPage() {
       await updateRequestStatus(id, newStatus);
       message.success("Статус обновлен");
       loadRequests();
-    } catch (error) {
+    } catch (error: any) { // ← ДОБАВЬ ТИП any
+      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
       message.error("Ошибка обновления статуса");
     }
   };
