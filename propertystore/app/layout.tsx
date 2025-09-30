@@ -1,6 +1,7 @@
-import Layout, { Content, Footer, Header } from 'antd/es/layout/layout';
+import { Content } from 'antd/es/layout/layout';
 import { Providers } from './providers';
-import { AppMenu } from './components/AppMenu';
+import { CustomHeader } from './components/CustomHeader';
+import { CustomFooter } from './components/CustomFooter';
 import './globals.css';
 
 export default function RootLayout({
@@ -12,13 +13,11 @@ export default function RootLayout({
     <html lang="ru">
       <body>
         <Providers>
-          <Layout style={{minHeight:"100vh"}}>
-            <Header>
-              <AppMenu />
-            </Header>
-            <Content style={{padding: "0 48px"}}>{children}</Content>
-            <Footer style={{textAlign: "center"}}>This is property store</Footer>
-          </Layout>        
+          <div style={{ minHeight: "100vh", display: 'flex', flexDirection: 'column' }}>
+            <CustomHeader />
+            <Content style={{ flex: 1, padding: "0" }}>{children}</Content>
+            <CustomFooter />
+          </div>
         </Providers>
       </body>
     </html>

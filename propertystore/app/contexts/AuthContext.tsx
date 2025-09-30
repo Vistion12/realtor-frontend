@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -45,20 +45,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ОДНА функция useAuth - объединенная
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
 
-  // Функция для проверки ошибок авторизации
-  const checkAuthError = (error: any) => {
-    if (error?.message === 'Unauthorized' || error?.message?.includes('401')) {
+  
+  const checkAuthError = useCallback((error: any) => {
+    if (error?.response?.status === 401 || 
+        error?.message === 'Unauthorized' || 
+        error?.message?.includes('401')) {
       context.logout();
       window.location.href = '/login';
+      return true;
     }
-  };
+    return false;
+  }, [context]);
 
   return { 
     ...context, 
