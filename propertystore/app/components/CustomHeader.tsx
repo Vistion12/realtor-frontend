@@ -8,12 +8,10 @@ export function CustomHeader() {
   const { isAuthenticated, username, logout } = useAuth();
 
   const menuItems = [
-    { name: "Новостройки", href: "/properties?type=novostroyki" },
-    { name: "Вторичка", href: "/properties?type=secondary" },
-    { name: "Аренда", href: "/properties?type=rent" },
-    { name: "Загородная недвижимость", href: "/properties?type=countryside" },
-    { name: "Инвест проекты", href: "/properties?type=invest" }
-  ];
+  { name: "Каталог недвижимости", href: "/properties" },
+  { name: "Услуги", href: "/services" }, // если нужно
+  { name: "Контакты", href: "/contacts" }, // если нужно
+];
 
   const adminItems = [
     { name: "Управление объектами", href: "/admin/properties" },

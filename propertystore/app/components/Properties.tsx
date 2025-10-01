@@ -2,7 +2,7 @@ import Card from "antd/es/card/Card";
 import { CatrdTitle } from "./Cardtitle";
 import Button from "antd/es/button/button";
 import { ImageCarousel } from "./ImageCarousel";
-import { ViewingForm } from "./ViewingForm"; // Добавляем импорт
+import { ViewingForm } from "./ViewingForm";
 import { Property } from "../Models/Property";
 import { ExpandableText } from "./ExpandableText";
 
@@ -51,6 +51,12 @@ export const Properties = ({ properties, handleDelete, handleOpen }: Props) => {
             />
           </div>
           
+          {/* Статус активности */}
+          <p>
+            Статус: <span className={`property-status ${property.isActive ? 'active' : 'inactive'}`}>
+              {property.isActive ? 'Активен' : 'Неактивен'}
+            </span>
+          </p>
           
           <ViewingForm property={property} />
           
