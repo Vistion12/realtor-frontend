@@ -15,7 +15,7 @@ export const ClientForm = ({ client, onSuccess, onCancel }: Props) => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  // Добавил useEffect для сброса формы при изменении клиента
+  
   useEffect(() => {
     if (client) {
       form.setFieldsValue({

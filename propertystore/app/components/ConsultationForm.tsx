@@ -43,6 +43,7 @@ export const ConsultationForm = () => {
       </button>
 
       <Modal
+        className="consultation-form-modal"
         title="Заявка на консультацию"
         open={isModalOpen}
         onCancel={() => {
@@ -50,7 +51,6 @@ export const ConsultationForm = () => {
           setIsModalOpen(false);
         }}
         footer={null}
-        width={500}
         styles={{
           body: { padding: '24px 0' },
           header: { borderBottom: '1px solid #d9d9d9', marginBottom: '0' }

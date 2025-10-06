@@ -141,13 +141,13 @@ export const CreateUpdateProperty = ({
 
     return (
         <Modal 
+            className="property-modal"
             title={mode === Mode.Create ? "Добавить объект недвижимости" : "Редактировать объект"}
             open={isModalOpen} 
             onOk={handleOnOk}
             onCancel={handleCancel}
             cancelText="Отмена"
             okText={mode === Mode.Create ? "Создать" : "Сохранить"}
-            width={600}
         >
             <div className="property_modal" style={{ padding: '16px 0' }}>
                 <Form 

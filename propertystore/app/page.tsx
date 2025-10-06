@@ -1,15 +1,15 @@
 "use client";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ConsultationForm } from "./components/ConsultationForm"; 
 import { getAllClients } from "./services/clients"; 
 import Link from "next/link";
+import { DealStagesModal } from "./components/DealStagesModal";
 
 export default function Home() {
+  const [isStagesModalOpen, setIsStagesModalOpen] = useState(false);
+
   useEffect(() => {    
-    getAllClients()
-      .then(clients => console.log("Clients:", clients))
-      .catch(error => console.error("API Error:", error));
+    
   }, []);
 
   return (
@@ -55,7 +55,10 @@ export default function Home() {
                     Все сделки, которые я сопровождаю проходят несколько этапов юридической проверки.
                   </p>
                 </div>
-                <button className="motivation-card-button button transparent">
+                <button 
+                  className="motivation-card-button button transparent"
+                  onClick={() => setIsStagesModalOpen(true)}
+                >
                   Этапы
                 </button>
               </div>
@@ -83,9 +86,11 @@ export default function Home() {
                     но и для инвестирования!
                   </p>
                 </div>
-                <button className="motivation-card-button button transparent">
-                  Инвест объекты
-                </button>
+                <Link href="/properties?type=invest">
+                  <button className="motivation-card-button button transparent">
+                    Инвест объекты
+                  </button>
+                </Link>
               </div>
               <img 
                 className="motivation-card-image"
@@ -171,14 +176,22 @@ export default function Home() {
               >
                 Оставьте заявку прямо сейчас
               </h3>
-              <div className="join-us-form-subtitle">
+              <div className="join-us-form-subtitle" style={{ textAlign: 'center', marginBottom: '30px' }}>
                 Заполните форму сегодня и я продам вашу недвижимость завтра
               </div>
             </header>
-            <ConsultationForm />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <ConsultationForm />
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Модальное окно этапов сделки */}
+      <DealStagesModal 
+        isOpen={isStagesModalOpen}
+        onClose={() => setIsStagesModalOpen(false)}
+      />
     </div>
   );
 }
