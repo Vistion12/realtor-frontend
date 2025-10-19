@@ -27,3 +27,39 @@ export interface ClientFormData {
   source: SourceType;
   notes?: string;
 }
+
+// Типы для сделок и воронки
+export interface Deal {
+  id: string;
+  title: string;
+  notes?: string;
+  dealAmount?: number;
+  clientId: string;
+  pipelineId: string;
+  currentStageId: string;
+  stageStartedAt: string;
+  stageDeadline?: string;
+  isActive: boolean;
+  isOverdue: boolean;
+  client?: {
+    name: string;
+    phone: string;
+    email?: string;
+  };
+}
+
+export interface DealStage {
+  id: string;
+  name: string;
+  order: number;
+  expectedDuration: string;
+  pipelineId: string;
+}
+
+export interface Pipeline {
+  id: string;
+  name: string;
+  description: string;
+  isActive: boolean;
+  stages: DealStage[];
+}

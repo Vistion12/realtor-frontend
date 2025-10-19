@@ -33,6 +33,7 @@ export function CustomHeader() {
   ];
 
   const adminItems = [
+    { name: "Сделки", href: "/deals" },
     { name: "Управление объектами", href: "/admin/properties" },
     { name: "Клиенты", href: "/clients" },
     { name: "Заявки", href: "/requests" },
