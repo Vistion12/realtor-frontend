@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ant-design/plots": "^2.6.6",
     "@hello-pangea/dnd": "^18.0.1",
     "antd": "^5.27.3",
     "next": "15.5.0",

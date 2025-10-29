@@ -11,15 +11,16 @@ export function AppMenu() {
     { key: "catalog", label: <Link href={"/properties"}>Каталог недвижимости</Link> },
   ];
 
-  const adminItems = [
-    { key: "admin-properties", label: <Link href={"/admin/properties"}>Управление объектами</Link> },
-    { key: "clients", label: <Link href={"/clients"}>Клиенты</Link> },
-    { key: "requests", label: <Link href={"/requests"}>Заявки</Link> },
-    { 
-      key: "logout", 
-      label: <span onClick={logout}>Выйти ({username})</span> 
-    },
-  ];
+   const adminItems = [
+  { key: "dashboard", label: <Link href={"/dashboard"}>Дашборд</Link> }, // ← ДОБАВЛЯЕМ
+  { key: "admin-properties", label: <Link href={"/admin/properties"}>Управление объектами</Link> },
+  { key: "clients", label: <Link href={"/clients"}>Клиенты</Link> },
+  { key: "requests", label: <Link href={"/requests"}>Заявки</Link> },
+  { 
+    key: "logout", 
+    label: <span onClick={logout}>Выйти ({username})</span> 
+  },
+];
 
   const items = [...publicItems, ...(isAuthenticated ? adminItems : [])];
 
