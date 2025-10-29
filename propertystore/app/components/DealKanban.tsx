@@ -339,7 +339,7 @@ const handleCloseDeal = async () => {
           {!filters.showCompleted && (
             <Tag color="orange" style={{ marginLeft: '8px' }}>Завершенные скрыты</Tag>
           )}
-        </div>
+      </div>
       </div>
 
       {/* КАНБАН-ДОСКА */}

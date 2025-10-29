@@ -1285,6 +1285,118 @@ a,button,input,textarea, svg * {
   margin: 0;
 }
 
+/* Стили для карточек заявок */
+.request-card {
+  border: 1px solid var(--color-light-gray) !important;
+  border-radius: 12px !important;
+  transition: all var(--transition-duration) ease !important;
+  height: 100%;
+  min-height: 220px;
+}
+
+.request-card:hover {
+  border-color: var(--color-dark-gray) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.request-type-tag,
+.request-status-tag {
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  border: none !important;
+  padding: 4px 8px !important;
+}
+
+.client-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-dark);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.client-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-dark-gray);
+  line-height: 1.2;
+}
+
+.contact-icon {
+  font-size: 12px;
+}
+
+.request-date {
+  font-size: 12px;
+  color: var(--color-light-gray);
+  margin-bottom: 12px;
+}
+
+.request-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.request-actions .ant-btn {
+  flex: 1;
+  height: 32px !important;
+  font-size: 12px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.details-btn {
+  border: 1px solid var(--color-light-gray) !important;
+  color: var(--color-dark-gray) !important;
+}
+
+.details-btn:hover {
+  border-color: var(--color-dark-gray) !important;
+  color: var(--color-dark) !important;
+}
+
+.deal-btn {
+  background: var(--color-dark-gray) !important;
+  border-color: var(--color-dark-gray) !important;
+}
+
+.deal-btn:hover {
+  background: var(--color-light-gray) !important;
+  border-color: var(--color-light-gray) !important;
+}
+
+.deal-btn:disabled {
+  background: #f5f5f5 !important;
+  border-color: #d9d9d9 !important;
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+
+/* Сетка для карточек заявок */
+.requests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+/* Переопределяем стандартные стили Ant Design для наших карточек */
+.request-card .ant-card-body {
+  padding: 16px !important;
+}
+
 
 /* Адаптивность */
 @media(max-width: 1919px){
@@ -1694,6 +1806,22 @@ a,button,input,textarea, svg * {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
+    .request-card {
+    min-height: 200px;
+  }
+  
+  .client-name {
+    font-size: 14px;
+  }
+  
+  .contact-item {
+    font-size: 12px;
+  }
+  
+  .request-actions .ant-btn {
+    height: 28px !important;
+    font-size: 11px !important;
+  }
 }
 
 /* Бургер-меню */
