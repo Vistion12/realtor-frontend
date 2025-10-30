@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button, message, Row, Col, Card } from "antd";
+import { Button, message, Row, Col } from "antd";
 import { useAuth } from "../contexts/AuthContext";
 import { MetricCards } from "../components/MetricCards";
 import { DealFunnelChart } from "../components/DealFunnelChart";
 import { DashboardMetrics, getDashboardMetrics } from "../services/analitics";
 import { ActiveDealsMiniKanban } from "../components/ActiveDealsMiniKanban";
+import { DealsTrendChart } from "../components/DealsTrendChart";
+import { PropertyTypeChart } from "../components/PropertyTypeChart";
 
 export default function DashboardPage() {
   const [metrics, setMetrics] = useState<DashboardMetrics>({
@@ -58,34 +60,34 @@ export default function DashboardPage() {
 
       <div className="dashboard-content container">
         {/* KPI карточки */}
-        <MetricCards metrics={metrics} loading={loading} />
+        <MetricCards metrics={metrics} loading={loading} />        
         
-        {/* Воронка конверсии и дополнительная аналитика */}
+        {/* Воронка конверсии и мини-канбан */}
         <Row gutter={[20, 20]} style={{ marginTop: '40px' }}>
-        <Col xs={24} lg={12}>
+          <Col xs={24} lg={12}>
             <DealFunnelChart 
-            pipelineId={salesPipelineId} 
-            height={400}
+              pipelineId={salesPipelineId} 
+              height={400}
             />
-        </Col>
-        <Col xs={24} lg={12}>
+          </Col>
+          <Col xs={24} lg={12}>
             <ActiveDealsMiniKanban 
-            pipelineId={salesPipelineId}
-            height={400}
-            maxDealsPerStage={3}
+              pipelineId={salesPipelineId}
+              height={400}
+              maxDealsPerStage={3}
             />
-        </Col>
+          </Col>
         </Row>
-
-        {/* Заглушка для будущих графиков */}
-        <div style={{ marginTop: '40px', textAlign: 'center', color: '#666' }}>
-          <h3 style={{ color: 'var(--color-dark)', marginBottom: '16px' }}>
-            Дополнительная аналитика в разработке
-          </h3>
-          <p style={{ fontSize: '14px' }}>
-            Графики динамики сделок и распределение по типам недвижимости скоро будут добавлены
-          </p>
-        </div>
+        
+        {/* График динамики и распределение по типам */}
+        <Row gutter={[20, 20]} style={{ marginTop: '40px' }}>
+          <Col xs={24} lg={12}>
+            <DealsTrendChart height={350} />
+          </Col>
+          <Col xs={24} lg={12}>
+            <PropertyTypeChart height={350} />
+          </Col>
+        </Row>
       </div>
     </div>
   );

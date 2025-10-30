@@ -12,6 +12,7 @@
     "@ant-design/plots": "^2.6.6",
     "@hello-pangea/dnd": "^18.0.1",
     "antd": "^5.27.3",
+    "dayjs": "^1.11.18",
     "next": "15.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0"

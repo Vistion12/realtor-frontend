@@ -19,6 +19,13 @@ export interface DealStageAnalytics {
   overdueDeals: number;
 }
 
+export interface PropertyTypeAnalytics {
+  propertyType: string;
+  displayName: string;
+  dealCount: number;
+  percentage: number;
+}
+
 export interface DashboardMetrics {
   totalDeals: number;
   activeDeals: number;
@@ -46,6 +53,15 @@ export const getStagesAnalytics = async (pipelineId: string): Promise<DealStageA
   });
   
   if (!response.ok) throw new Error('Ошибка загрузки аналитики этапов');
+  return response.json();
+};
+
+export const getPropertyTypesAnalytics = async (pipelineId: string): Promise<PropertyTypeAnalytics[]> => {
+  const response = await fetch(`${BASE_URL}/deals/pipeline/${pipelineId}/property-types-analytics`, {
+    headers: authHeaders(),
+  });
+  
+  if (!response.ok) throw new Error('Ошибка загрузки аналитики по типам недвижимости');
   return response.json();
 };
 
