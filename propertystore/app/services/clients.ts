@@ -10,6 +10,11 @@ export interface Client {
   source: string;
   notes?: string;
   createdAt: Date;
+
+  hasPersonalAccount: boolean;
+  accountLogin?: string;
+  isAccountActive: boolean;
+  consentToPersonalData: boolean;
 }
 
 export interface ClientRequest {
@@ -27,6 +32,7 @@ export const getAllClients = async (): Promise<Client[]> => {
   
   if (!response.ok) throw new Error('Ошибка загрузки клиентов');
   return response.json();
+  
 };
 
 export const getClientById = async (id: string): Promise<Client> => {

@@ -6,22 +6,22 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Client, getAllClients, deleteClient } from "../services/clients";
 import { ClientForm } from "../components/ClientForm";
 import { ClientsCard } from "../components/ClientsCard";
-import { useAuth } from "../contexts/AuthContext"; // ← ДОБАВЬ ИМПОРТ
+import { useAuth } from "../contexts/AuthContext"; 
 
 export default function ClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
-  const { checkAuthError } = useAuth(); // ← ДОБАВЬ ХУК
+  const { checkAuthError } = useAuth(); 
 
   const loadClients = async () => {
     try {
       setLoading(true);
       const data = await getAllClients();
       setClients(data);
-    } catch (error: any) { // ← ДОБАВЬ ТИП any
-      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
+    } catch (error: any) { 
+      checkAuthError(error); 
       message.error("Ошибка загрузки клиентов");
     } finally {
       setLoading(false);
@@ -33,11 +33,18 @@ export default function ClientsPage() {
       await deleteClient(id);
       message.success("Клиент удален");
       loadClients();
-    } catch (error: any) { // ← ДОБАВЬ ТИП any
-      checkAuthError(error); // ← ДОБАВЬ ПРОВЕРКУ ОШИБКИ
+    } catch (error: any) { 
+      checkAuthError(error); 
       message.error("Ошибка удаления клиента");
     }
   };
+
+  const handleActivateAccount = (clientId: string, tempPassword: string) => {
+  // Просто обновляем список клиентов
+  loadClients();
+  // Можем показать сообщение с паролем
+  message.info(`Пароль сгенерирован: ${tempPassword}`);
+};
 
   useEffect(() => {
     loadClients();
@@ -80,6 +87,7 @@ export default function ClientsPage() {
           setIsModalOpen(true);
         }}
         onDelete={handleDelete}
+        onActivateAccount={handleActivateAccount}
         loading={loading}
       />
 

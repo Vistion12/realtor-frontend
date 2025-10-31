@@ -22,7 +22,8 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.token, data.username);
+        // Исправляем - добавляем роль 'realtor'
+        login(data.token, data.username, 'realtor');
         message.success('Вход выполнен успешно!');
         router.push('/admin/properties'); 
       } else {

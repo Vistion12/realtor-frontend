@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { useAuth } from '../contexts/AuthContext';
 import { ServicesModal } from './ServicesModal'; 
 import { ContactsModal } from './ContactsModal';
+import { Dropdown, Button, Avatar, MenuProps } from 'antd'; // Добавляем MenuProps
+import { UserOutlined, LogoutOutlined, TeamOutlined, DashboardOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/navigation'; // Добавляем useRouter
 
 interface MenuItem {
   name: string;
@@ -16,7 +19,8 @@ export function CustomHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesModalOpen, setIsServicesModalOpen] = useState(false);
   const [isContactsModalOpen, setIsContactsModalOpen] = useState(false);
-  const { isAuthenticated, username, logout } = useAuth();
+  const { isAuthenticated, username, userRole, logout } = useAuth();
+  const router = useRouter(); // Добавляем router
 
   const menuItems: MenuItem[] = [
     { name: "Каталог недвижимости", href: "/properties" },
@@ -32,13 +36,19 @@ export function CustomHeader() {
     },
   ];
 
-  const adminItems = [
-  { name: "Дашборд", href: "/dashboard" },
-  { name: "Сделки", href: "/deals" },
-  { name: "Управление объектами", href: "/admin/properties" },
-  { name: "Клиенты", href: "/clients" },
-  { name: "Заявки", href: "/requests" },
-];
+  const realtorMenuItems = [
+    { name: "Дашборд", href: "/dashboard" },
+    { name: "Сделки", href: "/deals" },
+    { name: "Управление объектами", href: "/admin/properties" },
+    { name: "Клиенты", href: "/clients" },
+    { name: "Заявки", href: "/requests" },
+  ];
+
+  const clientMenuItems = [
+    { name: "Мои сделки", href: "/client/dashboard" },
+    { name: "Документы", href: "/client/documents" },
+    { name: "Настройки", href: "/client/settings" },
+  ];
 
   const handleMenuClick = (item: MenuItem) => {
     if (item.onClick) {
@@ -46,6 +56,71 @@ export function CustomHeader() {
     }
     setIsMenuOpen(false);
   };
+
+  const getUserMenuItems = (): MenuProps['items'] => {
+    const items: MenuProps['items'] = [
+      {
+        key: 'profile',
+        icon: <UserOutlined />,
+        label: username || 'Пользователь',
+        disabled: true,
+      },
+      {
+        type: 'divider',
+      }
+    ];
+
+    // Добавляем пункты меню в зависимости от роли
+    if (userRole === 'realtor') {
+      realtorMenuItems.forEach(item => {
+        items?.push({
+          key: item.href!,
+          icon: <DashboardOutlined />,
+          label: item.name,
+          onClick: () => router.push(item.href!)
+        });
+      });
+    } else if (userRole === 'client') {
+      clientMenuItems.forEach(item => {
+        items?.push({
+          key: item.href!,
+          icon: <TeamOutlined />,
+          label: item.name,
+          onClick: () => router.push(item.href!)
+        });
+      });
+    }
+
+    items?.push(
+      {
+        type: 'divider',
+      }, 
+      {
+        key: 'logout',
+        icon: <LogoutOutlined />,
+        label: 'Выйти',
+        onClick: logout,
+        danger: true,
+      }
+    );
+
+    return items;
+  };
+
+  const getAuthMenuItems = (): MenuProps['items'] => [
+    {
+      key: 'realtor',
+      icon: <UserOutlined />,
+      label: 'Вход для риелтора',
+      onClick: () => router.push('/login')
+    },
+    {
+      key: 'client',
+      icon: <TeamOutlined />,
+      label: 'Личный кабинет клиента',
+      onClick: () => router.push('/client-login')
+    }
+  ];
 
   return (
     <>
@@ -74,7 +149,7 @@ export function CustomHeader() {
                 ) : (
                   <Link 
                     className="header-menu-link" 
-                    href={item.href!} // Добавляем ! чтобы указать что href точно есть
+                    href={item.href!}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {item.name}
@@ -82,43 +157,53 @@ export function CustomHeader() {
                 )}
               </li>
             ))}
-            
-            {/* Админские пункты меню */}
-            {isAuthenticated && adminItems.map((item, index) => (
-              <li key={`admin-${index}`} className="header-menu-item">
-                <Link 
-                  className="header-menu-link" 
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  style={{ color: '#1890ff' }}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
           </ul>
         </nav>
         
         <div className="header-actions">
           {isAuthenticated ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <span style={{ fontSize: '14px', color: 'var(--color-dark-gray)' }}>
-                {username}
-              </span>
-              <button 
-                className="button"
-                onClick={logout}
-                style={{ height: '32px', fontSize: '11px' }}
+            <Dropdown 
+              menu={{ items: getUserMenuItems() }} 
+              placement="bottomRight"
+              trigger={['click']}
+            >
+              <Button 
+                type="text" 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px',
+                  height: '32px'
+                }}
               >
-                Выйти
-              </button>
-            </div>
+                <Avatar 
+                  size="small" 
+                  icon={<UserOutlined />} 
+                  style={{ 
+                    backgroundColor: userRole === 'realtor' ? '#1890ff' : '#52c41a' 
+                  }}
+                />
+                <span style={{ fontSize: '14px' }}>
+                  {username}
+                  {userRole === 'realtor' && ' (Риелтор)'}
+                  {userRole === 'client' && ' (Клиент)'}
+                </span>
+              </Button>
+            </Dropdown>
           ) : (
-            <Link href="/login">
-              <button className="button" style={{ height: '32px', fontSize: '11px' }}>
-                Вход
-              </button>
-            </Link>
+            <Dropdown 
+              menu={{ items: getAuthMenuItems() }} 
+              placement="bottomRight"
+              trigger={['click']}
+            >
+              <Button 
+                type="primary" 
+                icon={<LogoutOutlined/>}
+                size="large"
+              >
+                Войти в систему
+              </Button>
+            </Dropdown>
           )}
           
           <button 

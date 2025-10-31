@@ -1,17 +1,30 @@
 "use client";
 import { useEffect, useState } from "react";
 import { ConsultationForm } from "./components/ConsultationForm"; 
-import { getAllClients } from "./services/clients"; 
 import Link from "next/link";
 import { DealStagesModal } from "./components/DealStagesModal";
+import { Button, Dropdown, Space } from "antd";
+import { UserOutlined, LoginOutlined, TeamOutlined } from '@ant-design/icons';
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [isStagesModalOpen, setIsStagesModalOpen] = useState(false);
+  const router = useRouter();
 
-  useEffect(() => {    
-    
-  }, []);
-
+  const authMenuItems = [
+    {
+      key: 'realtor',
+      icon: <UserOutlined />,
+      label: 'Вход для риелтора',
+      onClick: () => router.push('/login')
+    },
+    {
+      key: 'client',
+      icon: <TeamOutlined />,
+      label: 'Личный кабинет клиента',
+      onClick: () => router.push('/client/login')
+    }
+  ];
   return (
     <div>
       {/* Баннер секция */}
@@ -22,6 +35,7 @@ export default function Home() {
             Опыт работы с 2013 года.
           </div>
           <h3 className="banner-title">риелтор Чернова Алина</h3>
+          
         </div>
       </section>
 

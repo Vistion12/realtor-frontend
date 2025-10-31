@@ -2071,11 +2071,14 @@ a,button,input,textarea, svg * {
 /* Плавная анимация для модальных окон */
 .ant-modal {
   transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) !important;
+   z-index: 9999 !important;
 }
 
 .ant-modal-mask {
   background: rgba(0, 0, 0, 0.6) !important;
+  
 }
+
 
 /* Кастомные классы для конкретных форм */
 .consultation-form-wrapper,
